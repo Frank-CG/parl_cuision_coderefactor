@@ -1,0 +1,36 @@
+{
+    "id" : 1,
+    "version" : "parlcuision_0614",
+    "updateTime" : "2019-06-14 12:06:00-04:00",
+    "menuItemCount" : 4,
+    "menuItems" : [
+        {
+            "itemId" : 1,
+            "itemName" : "House soup",
+            "unitPrice" : 7.00,
+            "itemType" : "vegan",
+            "thumbnailUrl" : ""
+        },
+        {
+            "itemId" : 2,
+            "itemName" : "Caesar salad",
+            "unitPrice" : 8.00,
+            "itemType" : "healthy",
+            "thumbnailUrl" : ""
+        },
+        {
+            "itemId" : 3,
+            "itemName" : "Beet cured gralax",
+            "unitPrice" : 12.00,
+            "itemType" : "vegetarian",
+            "thumbnailUrl" : ""
+        },
+        {
+            "itemId" : 4,
+            "itemName" : "Brussels sprouts",
+            "unitPrice" : 7.00,
+            "itemType" : "healthy",
+            "thumbnailUrl" : ""
+        }
+    ]
+}
