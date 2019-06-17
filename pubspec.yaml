@@ -25,6 +25,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   equatable: ^0.2.6 # Simplify Equality Comparisons
   json_annotation: ^2.4.0 # Defines the annotations used by json_serializable to create code for JSON serialization and deserialization.
+  bloc: ^0.14.2
+  flutter_bloc: ^0.17.0
 
 dev_dependencies:
   test:
