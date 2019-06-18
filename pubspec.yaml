@@ -27,6 +27,7 @@ dependencies:
   json_annotation: ^2.4.0 # Defines the annotations used by json_serializable to create code for JSON serialization and deserialization.
   bloc: ^0.14.2
   flutter_bloc: ^0.17.0
+  flutter_screenutil: ^0.5.2
 
 dev_dependencies:
   test:
@@ -46,6 +47,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+   - assets/bg.png
+   - assets/plate.png
+   - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -77,3 +82,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Nunito Sans
+      fonts:
+        - asset: assets/fonts/Nunito_Sans/NunitoSans-Regular.ttf
+        - asset: assets/fonts/Nunito_Sans/NunitoSans-Bold.ttf
+          weight: 500
+        - asset: assets/fonts/Nunito_Sans/NunitoSans-Italic.ttf
+          style: italic

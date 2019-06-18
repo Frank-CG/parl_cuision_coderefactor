@@ -7,6 +7,10 @@ abstract class OrderState extends Equatable {
   OrderState([List props = const []]) : super(props);
 }
 
+class OrderChanging extends OrderState {
+  @override
+  String toString() => 'OrderChanging';
+}
 
 class OrderInited extends OrderState {
   final Order order;

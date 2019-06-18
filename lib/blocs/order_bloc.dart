@@ -17,12 +17,16 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     OrderEvent event,
   ) async* {
     if (event is ItemAddEvent) {
+      yield OrderChanging();
       this.order.add(event.orderItem);
       yield OrderInited(order: this.order);
     }
     if (event is ItemSubEvent) {
+      yield OrderChanging();
       this.order.remove(event.orderItem);
       yield OrderInited(order: this.order);
     }
   }
+
+  dispose(){}
 }

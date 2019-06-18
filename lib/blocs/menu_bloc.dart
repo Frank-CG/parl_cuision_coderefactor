@@ -22,13 +22,17 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       if(menuState is Loaded){
         yield Loaded(menu: menuState.menu);
       }else{
+        yield Loading();
         Menu menu = await repository.fetchMenu();
         yield Loaded(menu: menu);
       }
     }
     if (event is RefreshMenu) {
+      yield Loading();
       Menu menu = await repository.fetchMenu(forceRefresh: true);
       yield Loaded(menu: menu);
     }
   }
+
+  dispose(){}
 }
