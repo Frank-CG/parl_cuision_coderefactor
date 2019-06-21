@@ -7,9 +7,7 @@ import 'package:parl_cuision_coderefactor/models/models.dart';
 import 'package:parl_cuision_coderefactor/pages/menu/menu_item_card.dart';
 
 class MenuPage extends StatefulWidget {
-  MenuPage({Key key, @required this.callback}) : super(key: key);
-
-  final Function(RouteName routeName) callback;
+  MenuPage({Key key}) : super(key: key);
 
   _MenuPageState createState() => _MenuPageState();
 }
@@ -33,7 +31,6 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     final menuBloc = BlocProvider.of<MenuBloc>(context);
-    final orderBloc = BlocProvider.of<OrderBloc>(context);
 
     return Scaffold(
       body: Stack(
@@ -248,7 +245,6 @@ class _MenuPageState extends State<MenuPage> {
               ),
               Container(
                 height: ScreenUtil.getInstance().setHeight(1280),
-                // color: Colors.orange,
                 child: BlocBuilder(
                   bloc: menuBloc,
                   builder: (_, MenuState mState) {
@@ -258,21 +254,6 @@ class _MenuPageState extends State<MenuPage> {
                       );
                     }
                     if (mState is Loaded) {
-                      // return BlocBuilder(
-                      //   bloc: orderBloc,
-                      //   builder: (_, OrderState oState) {
-                      //     if (oState is OrderInited) {
-                      //       return ListView.builder(
-                      //         itemCount: mState.menu.menuItems.length,
-                      //         itemBuilder: (BuildContext context, int index) {
-                      //           MenuItem mItem = mState.menu.menuItems[index];
-                      //           return MenuItemCard(menuItem: mItem, orderItem: OrderItem(item: mItem, itemCount: 0),);
-                      //         },
-                      //       );
-                      //     }
-                      //   },
-                      // );
-
                       return ListView.builder(
                         itemCount: mState.menu.menuItems.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -318,6 +299,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   void profileOnTap() {
-    widget.callback(RouteName.Profile);
+    final _navBloc = BlocProvider.of<NavBloc>(context);
+    _navBloc.dispatch(NavTo(pageName: PageName.Profile, previousPageName: _navBloc.currentState.pageName,));
   }
 }

@@ -10,4 +10,5 @@ export './auth_state.dart';
 export './login_bloc.dart';
 export './login_event.dart';
 export './login_state.dart';
+export './navigate_bloc.dart';
 export './simple_bloc_delegate.dart';

@@ -8,6 +8,11 @@ abstract class OrderEvent extends Equatable {
   OrderEvent([List props = const []]) : super(props);
 }
 
+class ItemCleanEvent extends OrderEvent {
+  @override
+  String toString() => 'ItemClean';
+}
+
 class ItemAddEvent extends OrderEvent {
   final OrderItem orderItem;
   

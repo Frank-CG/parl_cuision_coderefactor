@@ -26,6 +26,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       this.order.remove(event.orderItem);
       yield OrderInited(order: this.order);
     }
+    if (event is ItemCleanEvent) {
+      yield OrderChanging();
+      this.order.clean();
+      yield OrderInited(order: this.order);
+    }
   }
 
   dispose(){}

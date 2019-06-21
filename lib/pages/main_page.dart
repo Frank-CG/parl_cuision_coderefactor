@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 1125, height: 2436, allowFontScaling: false)..init(context);
+    ScreenUtil.instance = ScreenUtil(width: 1125, height: 2436, allowFontScaling: true)..init(context);
 
     print('Device width:${ScreenUtil.screenWidth}'); //Device width
     print('Device height:${ScreenUtil.screenHeight}'); //Device height

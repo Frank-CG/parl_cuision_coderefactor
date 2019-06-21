@@ -125,10 +125,11 @@ class _MenuItemCardState extends State<MenuItemCard> {
                         bloc: orderBloc,
                         builder: (_, OrderState oState) {
                           if (oState is OrderInited) {
-                            print("Order ItemCount=" +
-                                oState.order.orderItems.length.toString());
+                            // print("Order ItemCount=" + oState.order.orderItems.length.toString());
+                            OrderItem item = oState.order.fetch(widget.orderItem);
+                            if(item == null) { item = widget.orderItem; }
                             return Text(
-                              widget.orderItem.itemCount.toString(),
+                              item.itemCount.toString(),
                               style:
                                   TextStyle(fontSize: 18, color: Colors.green),
                             );
