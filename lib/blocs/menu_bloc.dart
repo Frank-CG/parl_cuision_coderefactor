@@ -19,9 +19,9 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   ) async* {
     if (event is FetchMenu) {
       final menuState = currentState;
-      if(menuState is Loaded){
+      if (menuState is Loaded) {
         yield Loaded(menu: menuState.menu);
-      }else{
+      } else {
         yield Loading();
         Menu menu = await repository.fetchMenu();
         yield Loaded(menu: menu);
@@ -32,7 +32,16 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       Menu menu = await repository.fetchMenu(forceRefresh: true);
       yield Loaded(menu: menu);
     }
+    if (event is MenuFilterChange) {
+      yield Loading();
+      Menu menu = await repository.fetchMenu(
+        isHealthy: event.isHealthy,
+        isVegetarian: event.isVegetarian,
+        isVegan: event.isVegan,
+      );
+      yield Loaded(menu: menu);
+    }
   }
 
-  dispose(){}
+  dispose() {}
 }

@@ -6,6 +6,8 @@ import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 import 'package:parl_cuision_coderefactor/models/models.dart';
 import 'package:parl_cuision_coderefactor/pages/menu/menu_item_card.dart';
 
+enum MenuFilters { Healthy, Vegetarian, Vegan }
+
 class MenuPage extends StatefulWidget {
   MenuPage({Key key}) : super(key: key);
 
@@ -13,18 +15,25 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  bool _filterItem1 = true;
-  bool _filterItem2 = true;
-  bool _filterItem3 = true;
+  MenuBloc menuBloc;
 
-  void _filterItem1Changed(bool v) => setState(() => _filterItem1 = v);
-  void _filterItem2Changed(bool v) => setState(() => _filterItem2 = v);
-  void _filterItem3Changed(bool v) => setState(() => _filterItem3 = v);
+  List<bool> _filters = <bool>[true, true, true];
+  void _filterChanged(MenuFilters filter) {
+    int index = filter.index;
+    setState(() {
+      _filters[index] = !_filters[index];
+    });
+    menuBloc.dispatch(MenuFilterChange(
+      isHealthy: _filters[0],
+      isVegetarian: _filters[1],
+      isVegan: _filters[2],
+    ));
+  }
 
   @override
   void initState() {
     super.initState();
-    final menuBloc = BlocProvider.of<MenuBloc>(context);
+    menuBloc = BlocProvider.of<MenuBloc>(context);
     menuBloc.dispatch(FetchMenu());
   }
 
@@ -91,7 +100,7 @@ class _MenuPageState extends State<MenuPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () => _filterItem1Changed(!_filterItem1),
+                      onTap: () => _filterChanged(MenuFilters.Healthy),
                       child: Container(
                         padding: EdgeInsets.only(
                           right: 8.0,
@@ -115,7 +124,7 @@ class _MenuPageState extends State<MenuPage> {
                               top: 4.0,
                               right: 0,
                               child: Image.asset(
-                                _filterItem1
+                                _filters[MenuFilters.Healthy.index]
                                     ? "assets/images/checked.png"
                                     : "assets/images/unchecked.png",
                                 height: 13,
@@ -137,7 +146,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => _filterItem2Changed(!_filterItem2),
+                      onTap: () => _filterChanged(MenuFilters.Vegetarian),
                       child: Container(
                         padding: EdgeInsets.only(
                           right: 8.0,
@@ -161,7 +170,7 @@ class _MenuPageState extends State<MenuPage> {
                               top: 4.0,
                               right: 0,
                               child: Image.asset(
-                                _filterItem2
+                                _filters[MenuFilters.Vegetarian.index]
                                     ? "assets/images/checked.png"
                                     : "assets/images/unchecked.png",
                                 height: 13,
@@ -183,7 +192,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => _filterItem3Changed(!_filterItem3),
+                      onTap: () => _filterChanged(MenuFilters.Vegan),
                       child: Container(
                         padding: EdgeInsets.only(
                           right: 8.0,
@@ -199,7 +208,7 @@ class _MenuPageState extends State<MenuPage> {
                               top: 4.0,
                               right: 0,
                               child: Image.asset(
-                                _filterItem3
+                                _filters[MenuFilters.Vegan.index]
                                     ? "assets/images/checked.png"
                                     : "assets/images/unchecked.png",
                                 height: 13,
@@ -300,6 +309,9 @@ class _MenuPageState extends State<MenuPage> {
 
   void profileOnTap() {
     final _navBloc = BlocProvider.of<NavBloc>(context);
-    _navBloc.dispatch(NavTo(pageName: PageName.Profile, previousPageName: _navBloc.currentState.pageName,));
+    _navBloc.dispatch(NavTo(
+      pageName: PageName.Profile,
+      previousPageName: _navBloc.currentState.pageName,
+    ));
   }
 }

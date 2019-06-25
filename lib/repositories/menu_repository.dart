@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:parl_cuision_coderefactor/models/menu.dart';
+import 'package:parl_cuision_coderefactor/models/models.dart';
 import 'package:parl_cuision_coderefactor/repositories/menu_api_client.dart';
 
 class MenuRepository {
@@ -7,6 +8,7 @@ class MenuRepository {
     httpClient: http.Client(),
   );
   Menu _data;
+  Menu _filteredData;
   DateTime _expiredTime;
 
   Menu get data => _data;
@@ -19,7 +21,7 @@ class MenuRepository {
     _expiredTime = DateTime.now().add(Duration(seconds: 120,));
   }
 
-  Future<Menu> fetchMenu({forceRefresh: false}) async {
+  Future<Menu> fetchMenu({forceRefresh: false, isHealthy: true, isVegetarian: true, isVegan: true}) async {
     if(forceRefresh){
       await initial();
     }
@@ -27,6 +29,35 @@ class MenuRepository {
     if(_data == null || _current.isAfter(this._expiredTime)){
       await initial();
     }
-    return _data;
+    _filteredData = filter(isHealthy: isHealthy, isVegetarian: isVegetarian, isVegan: isVegan);
+    return _filteredData;
+  }
+
+  Menu filter({isHealthy: true, isVegetarian: true, isVegan: true}){
+    Menu result = _data.copy();
+    List<MenuItem> itemList = result.menuItems;
+    for(int i=0; i<itemList.length; i++){
+      MenuItem item = itemList[i];
+      switch (item.itemType) {
+        case "healthy":
+          if(!isHealthy){
+            itemList.removeAt(i);
+          }
+          break;
+        case "vegetarian":
+          if(!isVegetarian){
+            itemList.removeAt(i);
+          }
+          break;
+        case "vegan":
+          if(!isVegan){
+            itemList.removeAt(i);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+    return result;
   }
 }
