@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 
 class LoginForm extends StatefulWidget {
@@ -41,56 +42,101 @@ class _LoginFormState extends State<LoginForm> {
             );
           });
         }
-        
+
         return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage("assets/plate.png"), fit: BoxFit.contain)
-          ),
+          // height: AppConfig.instance.blockHeight * 75,
+          // decoration: BoxDecoration(
+          //   image: DecorationImage(image: AssetImage("assets/images/plate.png"), fit: BoxFit.contain)
+          // ),
           //color: Colors.grey.shade300,
-          margin: EdgeInsets.all(32.0),
+          padding: EdgeInsets.fromLTRB(32, 0, 32, 0),
           //padding: EdgeInsets.all(24.0),
           child: SingleChildScrollView(
             child: Form(
               child: Column(
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Email', 
-                      labelStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      fillColor: Colors.white,
-                      enabledBorder: new UnderlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.white70,) ),
+                  // Container(
+                  //   height: AppConfig.instance.blockHeight * 3,
+                  // ),
+                  Container(
+                    height: AppConfig.instance.blockHeight * 10,
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                        fillColor: Colors.white,
+                        enabledBorder: new UnderlineInputBorder(
+                            borderSide: new BorderSide(
+                          color: Colors.white70,
+                        )),
+                      ),
+                      controller: _usernameController,
                     ),
-                    controller: _usernameController,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Password', 
-                      labelStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      fillColor: Colors.white,
-                      enabledBorder: new UnderlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.white70,) ),
-                    ),
-                    controller: _passwordController,
-                    obscureText: true,
-                  ),
-                  SizedBox(height: 180),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 320, minHeight: 50,), 
-                    child: RaisedButton(
-                              onPressed:
-                                  state is! LoginLoading ? _onLoginButtonPressed : null,
-                              child: Text('Login', style:TextStyle(fontSize: 16.9, fontWeight: FontWeight.bold),),
-                            ),
-                  ),
-                  SizedBox(height: 20),
-                  new InkWell(
-                      child: new Text('Forgot password?',style:TextStyle(color: Colors.white, fontSize: 16.9,),),
-                      onTap: () => {},
                   ),
                   Container(
-                    child:
-                        state is LoginLoading ? CircularProgressIndicator() : null,
+                    height: AppConfig.instance.blockHeight * 10,
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                        fillColor: Colors.white,
+                        enabledBorder: new UnderlineInputBorder(
+                            borderSide: new BorderSide(
+                          color: Colors.white70,
+                        )),
+                      ),
+                      controller: _passwordController,
+                      obscureText: true,
+                    ),
+                  ),
+                  SizedBox(height: AppConfig.instance.blockHeight * 5,),
+                  Container(
+                    height: AppConfig.instance.blockHeight * 35,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/plate.png"),
+                            fit: BoxFit.contain)),
+                  ),
+                  Container(
+                    height: AppConfig.instance.blockHeight * 6,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: AppConfig.instance.blockWidth * 60,
+                        minHeight: AppConfig.instance.blockWidth * 8,
+                      ),
+                      child: RaisedButton(
+                        onPressed:
+                            state is! LoginLoading ? _onLoginButtonPressed : null,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                              fontSize: 16.9, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: AppConfig.instance.blockHeight * 5,
+                    alignment: Alignment.bottomCenter,
+                    child: InkWell(
+                      child: Text(
+                        'Forgot password?',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.9,
+                        ),
+                      ),
+                      onTap: () => {},
+                    ),
+                  ),
+                  Container(
+                    child: state is LoginLoading
+                        ? CircularProgressIndicator()
+                        : null,
                   ),
                 ],
               ),
@@ -110,7 +156,7 @@ class _LoginFormState extends State<LoginForm> {
   _onLoginButtonPressed() {
     _loginBloc.dispatch(LoginButtonPressed(
       username: _usernameController.text,
-      password: _passwordController.text, 
+      password: _passwordController.text,
       authenticationBloc: widget.authenticationBloc,
     ));
   }

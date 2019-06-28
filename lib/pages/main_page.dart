@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 import 'package:parl_cuision_coderefactor/pages/pages.dart';
 
@@ -23,6 +24,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 1125, height: 2436, allowFontScaling: true)..init(context);
+    AppConfig.instance = AppConfig()..init(context);
 
     print('Device width:${ScreenUtil.screenWidth}'); //Device width
     print('Device height:${ScreenUtil.screenHeight}'); //Device height

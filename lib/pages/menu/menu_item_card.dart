@@ -25,6 +25,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
       margin: EdgeInsets.fromLTRB(ScreenUtil.getInstance().setWidth(60), 0,
           ScreenUtil.getInstance().setWidth(60), 0),
       width: ScreenUtil.getInstance().setWidth(999),
+      // height: ScreenUtil.getInstance().setHeight(360),
       child: Card(
         child: Row(
           children: <Widget>[
@@ -82,8 +83,8 @@ class _MenuItemCardState extends State<MenuItemCard> {
               child: Icon(Icons.expand_more),
             ),
             Container(
-              width: ScreenUtil.getInstance().setWidth(105),
-              // height: ScreenUtil.getInstance().setHeight(340),
+              width: ScreenUtil.getInstance().setWidth(113),
+              height: ScreenUtil.getInstance().setHeight(360),
               decoration: BoxDecoration(
                 border: Border(
                   left: BorderSide(
@@ -92,19 +93,17 @@ class _MenuItemCardState extends State<MenuItemCard> {
                   ),
                 ),
               ),
-              child: Container(
-                child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      color: Colors.lightGreen[100],
-                      width: ScreenUtil.getInstance().setWidth(105),
-                      height: ScreenUtil.getInstance().setHeight(100),
-                      child: GestureDetector(
-                        onTap: () {
-                          orderBloc.dispatch(ItemAddEvent(orderItem: widget.orderItem));
-                        },
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        orderBloc.dispatch(
+                            ItemAddEvent(orderItem: widget.orderItem));
+                      },
+                      child: Container(
+                        color: Colors.lightGreen[100],
+                        width: double.infinity,
                         child: Container(
                           child: Icon(
                             Icons.add,
@@ -113,44 +112,41 @@ class _MenuItemCardState extends State<MenuItemCard> {
                         ),
                       ),
                     ),
-                    // Divider(
-                    //   color: Colors.grey.shade400,
-                    //   height: ScreenUtil.getInstance().setHeight(2),
-                    // ),
-                    Container(
-                      width: ScreenUtil.getInstance().setWidth(105),
-                      height: ScreenUtil.getInstance().setHeight(90),
+                  ),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
                       alignment: Alignment.center,
                       child: BlocBuilder(
                         bloc: orderBloc,
                         builder: (_, OrderState oState) {
                           if (oState is OrderInited) {
-                            // print("Order ItemCount=" + oState.order.orderItems.length.toString());
-                            OrderItem item = oState.order.fetch(widget.orderItem);
-                            if(item == null) { item = widget.orderItem; }
+                            OrderItem item =
+                                oState.order.fetch(widget.orderItem);
+                            if (item == null) {
+                              item = widget.orderItem;
+                            }
                             return Text(
                               item.itemCount.toString(),
                               style:
                                   TextStyle(fontSize: 18, color: Colors.green),
                             );
-                          }else{
+                          } else {
                             return Text("");
                           }
                         },
                       ),
                     ),
-                    // Divider(
-                    //   color: Colors.grey.shade400,
-                    //   height: ScreenUtil.getInstance().setHeight(2),
-                    // ),
-                    Container(
-                      color: Colors.lightGreen[100],
-                      width: ScreenUtil.getInstance().setWidth(105),
-                      height: ScreenUtil.getInstance().setHeight(100),
-                      child: GestureDetector(
-                        onTap: () {
-                          orderBloc.dispatch(ItemSubEvent(orderItem: widget.orderItem));
-                        },
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        orderBloc.dispatch(
+                            ItemSubEvent(orderItem: widget.orderItem));
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.lightGreen[100],
                         child: Container(
                           child: Icon(
                             Icons.remove,
@@ -159,8 +155,8 @@ class _MenuItemCardState extends State<MenuItemCard> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
