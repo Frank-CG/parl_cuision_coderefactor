@@ -6,7 +6,6 @@ import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 import 'package:parl_cuision_coderefactor/pages/checkout/checkout_page.dart';
 import 'package:parl_cuision_coderefactor/pages/information/information_page.dart';
-import 'package:parl_cuision_coderefactor/pages/menu/menu_page.dart';
 import 'package:parl_cuision_coderefactor/pages/pages.dart';
 import 'package:parl_cuision_coderefactor/pages/reservation/reservation_page.dart';
 
@@ -33,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         Widget _bodyWidget;
         switch (state.pageName) {
           case PageName.Menu:
-            _bodyWidget = MenuPage();
+            _bodyWidget = AppConfig.instance.orientation == Orientation.portrait ? MenuPagePortrait() : MenuPageLandscape();
             break;
           case PageName.Reservation:
             _bodyWidget = ReservationPage();

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 import 'package:parl_cuision_coderefactor/models/models.dart';
 import 'package:parl_cuision_coderefactor/pages/menu/menu_item_card.dart';
 
-enum MenuFilters { Healthy, Vegetarian, Vegan }
+class MenuPagePortrait extends StatefulWidget {
+  MenuPagePortrait({Key key}) : super(key: key);
 
-class MenuPage extends StatefulWidget {
-  MenuPage({Key key}) : super(key: key);
-
-  _MenuPageState createState() => _MenuPageState();
+  _MenuPagePortraitState createState() => _MenuPagePortraitState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuPagePortraitState extends State<MenuPagePortrait> {
   MenuBloc menuBloc;
 
   List<bool> _filters = <bool>[true, true, true];
@@ -40,55 +37,52 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     final menuBloc = BlocProvider.of<MenuBloc>(context);
+    double _fontSizeAdjustment = 0.0;
+    if(AppConfig.instance.deviceType == DeviceType.Tablets){
+      _fontSizeAdjustment = 12.0;
+    }
 
     return Scaffold(
       body: Stack(
         children: <Widget>[
           Column(
             children: [
-              Container(
-                height: ScreenUtil.getInstance().setHeight(330),
+              Container(  ///[Menu text Container]
+                height: AppConfig.instance.blockHeight * 11.0,
                 padding: EdgeInsets.only(
-                  left: ScreenUtil.getInstance().setWidth(63),
-                  top: ScreenUtil.getInstance().setHeight(150),
+                  left: AppConfig.instance.blockWidth * 5.0,
                 ),
-                alignment: Alignment.topLeft,
+                alignment: Alignment.bottomLeft,
                 color: Colors.white,
                 child: Text(
                   "Menu",
                   style: TextStyle(
-                    fontSize: 36.0,
+                    fontSize: 36.0 + _fontSizeAdjustment,
                     fontWeight: FontWeight.bold,
                     fontFamily: AppConfig.defaultFontFamily,
                   ),
                 ),
               ),
-              Container(
-                height: ScreenUtil.getInstance().setHeight(180),
+              Container(  ///[Filters text Container]
+                height: AppConfig.instance.blockHeight * 7.2,
                 padding: EdgeInsets.only(
-                  left: ScreenUtil.getInstance().setWidth(63),
-                  top: ScreenUtil.getInstance().setHeight(60),
-                  bottom: ScreenUtil.getInstance().setHeight(57),
+                  left: AppConfig.instance.blockWidth * 5.0,
                 ),
-                alignment: Alignment.topLeft,
+                alignment: Alignment.bottomLeft,
                 color: Colors.white,
                 child: Text(
                   "Filters",
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 14.0,
+                    fontSize: 18.0 + _fontSizeAdjustment,
                     fontWeight: FontWeight.w600,
                     fontFamily: AppConfig.defaultFontFamily,
                   ),
                 ),
               ),
-              Container(
-                height: ScreenUtil.getInstance().setHeight(240),
-                padding: EdgeInsets.only(
-                  left: 12.0,
-                  top: 0.0,
-                ),
-                alignment: Alignment.centerLeft,
+              Container(  ///[Filter items Container]
+                height: AppConfig.instance.blockHeight * 11.8,
+                alignment: Alignment.bottomLeft,
                 decoration: new BoxDecoration(
                     color: Colors.white,
                     border: new Border(
@@ -102,10 +96,6 @@ class _MenuPageState extends State<MenuPage> {
                     GestureDetector(
                       onTap: () => _filterChanged(MenuFilters.Healthy),
                       child: Container(
-                        padding: EdgeInsets.only(
-                          right: 8.0,
-                          left: 8.0,
-                        ),
                         decoration: new BoxDecoration(
                           border: Border(
                             right: BorderSide(
@@ -117,27 +107,38 @@ class _MenuPageState extends State<MenuPage> {
                         child: Stack(
                           children: <Widget>[
                             Container(
-                              height: 80,
-                              width: 60,
+                              width: AppConfig.instance.blockWidth * 20,
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                MenuFilters.Healthy.toString().split('.')[1],
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppConfig.defaultFontFamily,
+                                ),
+                              ),
                             ),
                             Positioned(
-                              top: 4.0,
-                              right: 0,
+                              top: AppConfig.instance.blockHeight * 0.8,
+                              right: AppConfig.instance.blockWidth * 1.0,
                               child: Image.asset(
                                 _filters[MenuFilters.Healthy.index]
                                     ? "assets/images/checked.png"
                                     : "assets/images/unchecked.png",
-                                height: 13,
-                                width: 13,
+                                height: AppConfig.instance.blockWidth * 3.6,
+                                width: AppConfig.instance.blockWidth * 3.6,
                               ),
                             ),
                             Align(
                               alignment: Alignment.center,
                               child: Container(
+                                // height: AppConfig.instance.blockHeight * 8.0,
+                                width: AppConfig.instance.blockWidth * 14.4,
+                                padding: EdgeInsets.only(
+                                  left: AppConfig.instance.blockWidth * 4.4,
+                                ),
                                 child: Image.asset(
                                   "assets/images/icon_healthy.png",
-                                  height: 55.0,
-                                  width: 50.0,
                                 ),
                               ),
                             ),
@@ -148,10 +149,6 @@ class _MenuPageState extends State<MenuPage> {
                     GestureDetector(
                       onTap: () => _filterChanged(MenuFilters.Vegetarian),
                       child: Container(
-                        padding: EdgeInsets.only(
-                          right: 8.0,
-                          left: 8.0,
-                        ),
                         decoration: new BoxDecoration(
                           border: Border(
                             right: BorderSide(
@@ -163,27 +160,38 @@ class _MenuPageState extends State<MenuPage> {
                         child: Stack(
                           children: <Widget>[
                             Container(
-                              height: 80,
-                              width: 60,
+                              width: AppConfig.instance.blockWidth * 20,
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                MenuFilters.Vegetarian.toString().split('.')[1],
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppConfig.defaultFontFamily,
+                                ),
+                              ),
                             ),
                             Positioned(
-                              top: 4.0,
-                              right: 0,
+                              top: AppConfig.instance.blockHeight * 0.8,
+                              right: AppConfig.instance.blockWidth * 1.0,
                               child: Image.asset(
                                 _filters[MenuFilters.Vegetarian.index]
                                     ? "assets/images/checked.png"
                                     : "assets/images/unchecked.png",
-                                height: 13,
-                                width: 13,
+                                height: AppConfig.instance.blockWidth * 3.6,
+                                width: AppConfig.instance.blockWidth * 3.6,
                               ),
                             ),
                             Align(
                               alignment: Alignment.center,
                               child: Container(
+                                // height: AppConfig.instance.blockHeight * 8.0,
+                                width: AppConfig.instance.blockWidth * 14.4,
+                                padding: EdgeInsets.only(
+                                  left: AppConfig.instance.blockWidth * 4.4,
+                                ),
                                 child: Image.asset(
                                   "assets/images/icon_vegetarian.png",
-                                  height: 55.0,
-                                  width: 75.0,
                                 ),
                               ),
                             ),
@@ -194,34 +202,41 @@ class _MenuPageState extends State<MenuPage> {
                     GestureDetector(
                       onTap: () => _filterChanged(MenuFilters.Vegan),
                       child: Container(
-                        padding: EdgeInsets.only(
-                          right: 8.0,
-                          left: 8.0,
-                        ),
                         child: Stack(
                           children: <Widget>[
                             Container(
-                              height: 80,
-                              width: 60,
+                              width: AppConfig.instance.blockWidth * 20,
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                MenuFilters.Vegan.toString().split('.')[1],
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppConfig.defaultFontFamily,
+                                ),
+                              ),
                             ),
                             Positioned(
-                              top: 4.0,
-                              right: 0,
+                              top: AppConfig.instance.blockHeight * 0.8,
+                              right: AppConfig.instance.blockWidth * 1.0,
                               child: Image.asset(
                                 _filters[MenuFilters.Vegan.index]
                                     ? "assets/images/checked.png"
                                     : "assets/images/unchecked.png",
-                                height: 13,
-                                width: 13,
+                                height: AppConfig.instance.blockWidth * 3.6,
+                                width: AppConfig.instance.blockWidth * 3.6,
                               ),
                             ),
                             Align(
                               alignment: Alignment.center,
                               child: Container(
+                                // height: AppConfig.instance.blockHeight * 8.0,
+                                width: AppConfig.instance.blockWidth * 14.4,
+                                padding: EdgeInsets.only(
+                                  left: AppConfig.instance.blockWidth * 4.4,
+                                ),
                                 child: Image.asset(
                                   "assets/images/icon_vegan.png",
-                                  height: 45.0,
-                                  width: 55.0,
                                 ),
                               ),
                             ),
@@ -232,12 +247,11 @@ class _MenuPageState extends State<MenuPage> {
                   ],
                 ),
               ),
-              Container(
-                height: ScreenUtil.getInstance().setHeight(200),
+              Container(  ///[Appetizers text Container]
+                height: AppConfig.instance.blockHeight * 8.0,
+                alignment: Alignment.bottomLeft,
                 padding: EdgeInsets.only(
-                  top: ScreenUtil.getInstance().setHeight(60),
-                  left: ScreenUtil.getInstance().setHeight(60),
-                  bottom: ScreenUtil.getInstance().setHeight(60),
+                  left: AppConfig.instance.blockWidth * 5.0,
                 ),
                 child: Row(
                   children: <Widget>[
@@ -245,59 +259,60 @@ class _MenuPageState extends State<MenuPage> {
                     Text(
                       "Appetizers",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 24.0 + _fontSizeAdjustment,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                height: ScreenUtil.getInstance().setHeight(1280),
-                child: BlocBuilder(
-                  bloc: menuBloc,
-                  builder: (_, MenuState mState) {
-                    if (mState is Loading || mState is Empty) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (mState is Loaded) {
-                      return ListView.builder(
-                        itemCount: mState.menu.menuItems.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          MenuItem mItem = mState.menu.menuItems[index];
-                          return MenuItemCard(
-                            menuItem: mItem,
-                            orderItem: OrderItem(item: mItem, itemCount: 0),
-                          );
-                        },
-                      );
-                    }
-                  },
+              Expanded(
+                child: Container(
+                  child: BlocBuilder(
+                    bloc: menuBloc,
+                    builder: (_, MenuState mState) {
+                      if (mState is Loading || mState is Empty) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (mState is Loaded) {
+                        return ListView.builder(
+                          itemCount: mState.menu.menuItems.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            MenuItem mItem = mState.menu.menuItems[index];
+                            return MenuItemCard(
+                              menuItem: mItem,
+                              orderItem: OrderItem(item: mItem, itemCount: 0),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ],
           ),
           Positioned(
-            top: ScreenUtil.getInstance().setHeight(180),
+            top: AppConfig.instance.blockHeight * 8.0,
             right: 0.0,
             child: Container(
               child: Image.asset(
                 "assets/images/menu_plate.png",
+                height: AppConfig.instance.blockHeight * 30.0,
               ),
             ),
           ),
           Positioned(
-            top: ScreenUtil.getInstance().setHeight(130),
-            right: 0.0,
+            top: AppConfig.instance.blockHeight * 5.0,
+            right: AppConfig.instance.blockWidth * 5.0,
             child: GestureDetector(
               onTap: profileOnTap,
               child: Container(
                 child: Image.asset(
                   "assets/images/nav.png",
-                  height: ScreenUtil.getInstance().setHeight(176 * 1.2),
-                  width: ScreenUtil.getInstance().setWidth(247 * 1.2),
+                  height: AppConfig.instance.blockHeight * 10.0,
                 ),
               ),
             ),

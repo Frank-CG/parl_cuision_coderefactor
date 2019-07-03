@@ -46,41 +46,53 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              // Container(
-              //   // height: ScreenUtil.getInstance().setHeight(400),
-              //   height: AppConfig.instance.blockHeight * 10,
-              // ),
               Container(
-                height: AppConfig.instance.blockHeight * 20,
+                // height: ScreenUtil.getInstance().setHeight(400),
+                height: AppConfig.instance.blockHeight * 6,
+              ),
+              Container(
+                height: AppConfig.instance.blockHeight * 14,
                 alignment: Alignment.bottomCenter,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Text(
-                      "Parl",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 48.0,
-                        fontFamily: "Playfair Display",
+                    Container(
+                      height: AppConfig.instance.blockHeight * 7,
+                      child: FittedBox(
+                        child: Text(
+                          "Parl",
+                          style: TextStyle(
+                            color: Colors.white,
+                            // fontSize: 48.0,
+                            fontFamily: "Playfair Display",
+                          ),
+                        ),
                       ),
                     ),
-                    Text(
-                      "Cuision",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 48.0,
-                          fontFamily: "Playfair Display"),
+                    Container(
+                      height: AppConfig.instance.blockHeight * 7,
+                      child: FittedBox(
+                        child: Text(
+                          "Cuision",
+                          style: TextStyle(
+                              color: Colors.white,
+                              // fontSize: 48.0,
+                              fontFamily: "Playfair Display"),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
               Container(
-                height: AppConfig.instance.blockHeight * 5,
+                height: AppConfig.instance.blockHeight * 3,
                 alignment: Alignment.topCenter,
-                child: Text(
-                  '- W E L C O M E -',
-                  style: TextStyle(
-                    color: Colors.white,
+                child: FittedBox(
+                  child: Text(
+                    '- W E L C O M E -',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

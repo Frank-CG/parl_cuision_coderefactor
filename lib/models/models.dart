@@ -1,3 +1,4 @@
+export './enums.dart';
 export './models.dart';
 export './menu.dart';
 export './menu_item.dart';
