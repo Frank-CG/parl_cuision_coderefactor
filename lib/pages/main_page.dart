@@ -35,7 +35,7 @@ class _MainPageState extends State<MainPage> {
     print('Ratio of actual height dp to design draft px:${ScreenUtil.getInstance().scaleHeight}'); 
     print('The ratio of font and width to the size of the design:${ScreenUtil.getInstance().scaleWidth * ScreenUtil.pixelRatio}');
     print('The ratio of  height width to the size of the design:${ScreenUtil.getInstance().scaleHeight * ScreenUtil.pixelRatio}');
-
+    print("mediaQuery.textScaleFactor=${ScreenUtil.textScaleFactory}");
     return BlocBuilder<AuthenticationEvent, AuthenticationState>(
           bloc: authenticationBloc,
           builder: (BuildContext context, AuthenticationState state) {

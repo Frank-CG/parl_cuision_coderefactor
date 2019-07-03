@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
+import 'package:parl_cuision_coderefactor/models/enums.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -11,82 +12,90 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextStyle _tileStyle = TextStyle(
-    fontSize: ScreenUtil.getInstance().setSp(62.0),
-    fontFamily: AppConfig.defaultFontFamily,
-    fontWeight: FontWeight.bold,
-  );
-  TextStyle _subtitleStyle = TextStyle(
-    fontSize: ScreenUtil.getInstance().setSp(32.0),
-    fontFamily: AppConfig.defaultFontFamily,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
+  final isLargeScreen =
+      AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+  final isLandscape =
+      AppConfig.instance.orientation == Orientation.landscape ? true : false;
+  final double _fontSizeAdjustment =
+      AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+  final double _basicWidth = AppConfig.instance.blockWidth;
+  final double _basicHeigth = AppConfig.instance.blockHeight;
+
+  TextStyle _pageTitleStyle;
+  TextStyle _tileStyle;
+  TextStyle _subtitleStyle;
+
   bool isPickup = true;
   bool isReservation = true;
   AuthenticationBloc authenticationBloc;
 
   @override
-  void initState() { 
-    super.initState();
+  void initState() {
     this.authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    _pageTitleStyle = TextStyle(
+      fontSize: 64.0 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+    );
+    _tileStyle = TextStyle(
+      fontSize: 32.0 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+    );
+    _subtitleStyle = TextStyle(
+      fontSize: 32.0 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    );
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topLeft,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: <Widget>[
-            _pageTop(),
-            SizedBox(
-              height: ScreenUtil.getInstance().setHeight(40),
-            ),
-            _profileInfo(),
-            SizedBox(
-              height: ScreenUtil.getInstance().setHeight(40),
-            ),
-            _notification(),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          _pageTop(),
+          SizedBox(
+            height: ScreenUtil.getInstance().setHeight(40),
+          ),
+          _profileInfo(),
+          SizedBox(
+            height: ScreenUtil.getInstance().setHeight(40),
+          ),
+          //_notification(),
+        ],
       ),
     );
   }
 
   Widget _pageTop() {
     return Container(
-      height: ScreenUtil.getInstance().setHeight(400),
+      padding: EdgeInsets.only(
+        left: _basicWidth * 5.0,
+        right: _basicWidth * 5.0,
+      ),
       child: Row(
         children: <Widget>[
           Container(
-            width: ScreenUtil.getInstance().setWidth(680),
+            width: _basicWidth * 60.0,
             alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: ScreenUtil.getInstance().setWidth(75),
-              ),
-              child: Text(
-                "Settings",
-                style: TextStyle(
-                    fontSize: ScreenUtil.getInstance().setSp(110.0),
-                    fontFamily: AppConfig.defaultFontFamily,
-                    fontWeight: FontWeight.bold),
-              ),
+            child: Text(
+              "Settings",
+              style: _pageTitleStyle,
             ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(445),
+            width: _basicWidth * 30.0,
             alignment: Alignment.bottomRight,
             child: GestureDetector(
               onTap: () {},
               child: Container(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomCenter,
                 child: Image.asset(
                   "assets/images/nav.png",
-                  height: ScreenUtil.getInstance().setHeight(176 * 1.2),
-                  width: ScreenUtil.getInstance().setWidth(247 * 1.2),
+                  width: _basicWidth * 12.0,
                 ),
               ),
             ),
@@ -99,47 +108,38 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _profileInfo() {
     TextStyle _labelStyle = TextStyle(
       color: Colors.grey,
-      fontSize: 12.0,
+      fontSize: 12.0 + _fontSizeAdjustment,
       fontFamily: AppConfig.defaultFontFamily,
       fontWeight: FontWeight.bold,
     );
     TextStyle _inputStyle = TextStyle(
       color: Colors.grey,
-      fontSize: 14.0,
+      fontSize: 14.0 + _fontSizeAdjustment,
       fontFamily: AppConfig.defaultFontFamily,
       fontWeight: FontWeight.bold,
     );
     return Container(
-      height: ScreenUtil.getInstance().setHeight(620),
+      padding: EdgeInsets.only(
+        left: _basicWidth * 5.0,
+        right: _basicWidth * 5.0,
+      ),
       alignment: Alignment.topLeft,
-      // color: Colors.yellow,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: ScreenUtil.getInstance().setWidth(75),
-                right: ScreenUtil.getInstance().setWidth(75),
-              ),
-              child: Text(
-                "Profile information",
-                style: _tileStyle,
-              ),
+            width: _basicWidth * 90,
+            child: Text(
+              "Profile information",
+              style: _tileStyle,
             ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
             child: Row(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(420),
+                  width: _basicWidth * 40,
                   child: TextField(
                     style: _inputStyle,
                     controller: _getTextController("Mark"),
@@ -155,10 +155,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 SizedBox(
-                  width: ScreenUtil.getInstance().setWidth(80),
+                  width: _basicWidth * 4.0,
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(420),
+                  width: _basicWidth * 40,
                   child: TextField(
                     style: _inputStyle,
                     controller: _getTextController("Smith"),
@@ -177,16 +177,10 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(30),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
             child: Row(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(940),
+                  width: _basicWidth * 84,
                   child: TextField(
                     style: _inputStyle,
                     controller: _getTextController("msmith@gmail.com"),
@@ -205,16 +199,10 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(30),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
             child: Row(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(940),
+                  width: _basicWidth * 84,
                   child: TextField(
                     style: _inputStyle,
                     controller: _getTextController("514-999-2464"),
