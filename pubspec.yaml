@@ -27,7 +27,7 @@ dependencies:
   json_annotation: ^2.4.0 # Defines the annotations used by json_serializable to create code for JSON serialization and deserialization.
   bloc: ^0.14.2
   flutter_bloc: ^0.17.0
-  flutter_screenutil: ^0.5.2
+  # flutter_screenutil: ^0.5.2
   flutter_date_pickers: ^0.0.3
 
 dev_dependencies:

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/models/enums.dart';
 import 'package:parl_cuision_coderefactor/pages/checkout/checkout.dart';
 import 'package:parl_cuision_coderefactor/pages/checkout/hour_minute_picker.dart';
-import 'package:parl_cuision_coderefactor/pages/common/custom_picker.dart';
 
 class CenterStep2 extends StatefulWidget {
   CenterStep2({Key key}) : super(key: key);
