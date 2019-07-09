@@ -15,28 +15,43 @@ class CenterStep3 extends StatefulWidget {
 
 class _CenterStep3State extends State<CenterStep3> {
   CheckoutBloc _bloc;
+  bool isLargeScreen;
+  bool isLandscape;
+  double _fontSizeAdjustment;
+  double _basicWidth;
+  double _basicHeigth;
 
   @override
   void initState() {
     super.initState();
     _bloc = BlocProvider.of<CheckoutBloc>(context);
+    
   }
 
   @override
   Widget build(BuildContext context) {
     final orderBloc = BlocProvider.of<OrderBloc>(context);
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape = AppConfig.instance.orientation == Orientation.landscape
+        ? isLargeScreen ? false : true
+        : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
 
     final listHeader = Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: <Widget>[
           SizedBox(
-            width: ScreenUtil.getInstance().setWidth(300),
+            width: _basicWidth * 28.0,
             child: Text(
               "ITEMS",
               textAlign: TextAlign.left,
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 16.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade400,
@@ -44,12 +59,12 @@ class _CenterStep3State extends State<CenterStep3> {
             ),
           ),
           SizedBox(
-            width: ScreenUtil.getInstance().setWidth(300),
+            width: _basicWidth * 28.0,
             child: Text(
               "QUANTITY",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 16.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade400,
@@ -57,12 +72,12 @@ class _CenterStep3State extends State<CenterStep3> {
             ),
           ),
           SizedBox(
-            width: ScreenUtil.getInstance().setWidth(280),
+            width: _basicWidth * 25.0,
             child: Text(
               "PRICE",
               textAlign: TextAlign.right,
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 16.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade400,
@@ -83,30 +98,38 @@ class _CenterStep3State extends State<CenterStep3> {
       ),
     );
 
+    
+    
+    double titalContainerHeight = isLandscape ? _basicHeigth * 10.0 : _basicHeigth * 7.5;
+    double orderlistContainerHeigth = isLandscape ? _basicHeigth * 70.0 : _basicHeigth * 50.0 - 60.0;
+    double commentsContainerHeight = isLandscape ? _basicHeigth * 20.0 : _basicHeigth * 12.0;
+    double bottomContainerHeight = _basicHeigth * 5.5;
+
+    double orderlistContainerPadding = isLandscape || isLargeScreen ? _basicWidth * 7.5 : _basicHeigth * 3.5;
+
     return Column(
       children: <Widget>[
         Container(
-          height: ScreenUtil.getInstance().setHeight(280),
+          height: titalContainerHeight,
           padding: EdgeInsets.only(
-            left: ScreenUtil.getInstance().setWidth(120),
-            top: ScreenUtil.getInstance().setHeight(90),
+            left: _basicWidth * 5.0,
           ),
-          alignment: Alignment.topLeft,
+          alignment: Alignment.bottomLeft,
           child: Text(
             "Confirm your order",
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 18.0 + _fontSizeAdjustment,
               fontWeight: FontWeight.w800,
               fontFamily: AppConfig.defaultFontFamily,
             ),
           ),
         ),
         Container(
-          height: ScreenUtil.getInstance().setHeight(850),
+          height: orderlistContainerHeigth,
           padding: EdgeInsets.only(
-            left: ScreenUtil.getInstance().setWidth(80),
-            right: ScreenUtil.getInstance().setWidth(80),
-            bottom: ScreenUtil.getInstance().setWidth(80),
+            left: orderlistContainerPadding,
+            right: orderlistContainerPadding,
+            bottom: orderlistContainerPadding,
           ),
           child: Card(
             color: Colors.white,
@@ -114,50 +137,45 @@ class _CenterStep3State extends State<CenterStep3> {
               borderRadius: BorderRadius.circular(15.0),
             ),
             elevation: 2.0,
-            child: Scaffold(
-              body: BlocBuilder(
-                bloc: orderBloc,
-                builder: (BuildContext context, OrderState state) {
-                  if (state is OrderInited) {
-                    return ListView.builder(
-                      itemCount: state.order.itemCount + 2,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index == 0) {
-                          return listHeader;
-                        }
-                        if (index == 1) {
-                          return listHeaderSpace;
-                        }
-                        int itemIndex = index - 2;
-                        return _getOrderItem(state.order.orderItems[itemIndex]);
-                      },
-                    );
-                  }
-                },
-              ),
+            child: BlocBuilder(
+              bloc: orderBloc,
+              builder: (BuildContext context, OrderState state) {
+                if (state is OrderInited) {
+                  return ListView.builder(
+                    itemCount: state.order.itemCount + 2,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return listHeader;
+                      }
+                      if (index == 1) {
+                        return listHeaderSpace;
+                      }
+                      int itemIndex = index - 2;
+                      return _getOrderItem(state.order.orderItems[itemIndex]);
+                    },
+                  );
+                }
+              },
             ),
           ),
         ),
         Container(
-          height: ScreenUtil.getInstance().setHeight(320),
+          height: commentsContainerHeight,
           color: Colors.white,
           padding: EdgeInsets.only(
-            left: ScreenUtil.getInstance().setWidth(63),
+            left: _basicWidth * 5.0,
           ),
           child: Row(
             children: <Widget>[
               Container(
-                width: ScreenUtil.getInstance().setWidth(100),
-                margin: EdgeInsets.only(
-                  right: ScreenUtil.getInstance().setWidth(40),
-                ),
+                width: _basicWidth * 7.5,
                 child: Image.asset(
                   "assets/images/icon_pickuptime.png",
-                  width: ScreenUtil.getInstance().setWidth(100),
                 ),
               ),
+              Container(width: _basicWidth * 4.0,),
               Container(
-                width: ScreenUtil.getInstance().setWidth(340),
+                width: _basicWidth * 28.0,
                 alignment: Alignment.centerLeft,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -166,7 +184,7 @@ class _CenterStep3State extends State<CenterStep3> {
                     Text(
                       "Pickup time",
                       style: TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 14.0 + _fontSizeAdjustment,
                         fontFamily: AppConfig.defaultFontFamily,
                         color: Colors.grey,
                       ),
@@ -177,7 +195,7 @@ class _CenterStep3State extends State<CenterStep3> {
                         return Text(
                           state.pickupTime,
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 20.0 + _fontSizeAdjustment,
                             fontFamily: AppConfig.defaultFontFamily,
                             fontWeight: FontWeight.bold,
                           ),
@@ -190,23 +208,20 @@ class _CenterStep3State extends State<CenterStep3> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
-                  height: ScreenUtil.getInstance().setHeight(320),
+                  height: _basicHeigth * 20.0,
                   width: 1,
                   color: Colors.grey.shade300,
                 ),
               ),
               Container(
-                width: ScreenUtil.getInstance().setWidth(100),
-                margin: EdgeInsets.only(
-                  right: ScreenUtil.getInstance().setWidth(40),
-                ),
+                width: _basicWidth * 7.5,
                 child: Image.asset(
                   "assets/images/icon_total.png",
-                  width: ScreenUtil.getInstance().setWidth(100),
                 ),
               ),
+              Container(width: _basicWidth * 4.0,),
               Container(
-                width: ScreenUtil.getInstance().setWidth(340),
+                width: _basicWidth * 28.0,
                 alignment: Alignment.centerLeft,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +230,7 @@ class _CenterStep3State extends State<CenterStep3> {
                     Text(
                       "Total",
                       style: TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 14.0 + _fontSizeAdjustment,
                         fontFamily: AppConfig.defaultFontFamily,
                         color: Colors.grey,
                       ),
@@ -227,7 +242,7 @@ class _CenterStep3State extends State<CenterStep3> {
                           return Text(
                             "\$" + state.order.totalPrice.toStringAsFixed(2),
                             style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 20.0 + _fontSizeAdjustment,
                               fontFamily: AppConfig.defaultFontFamily,
                               fontWeight: FontWeight.bold,
                             ),
@@ -242,13 +257,13 @@ class _CenterStep3State extends State<CenterStep3> {
           ),
         ),
         Container(
-          height: ScreenUtil.getInstance().setHeight(150),
+          height: bottomContainerHeight,
           child: Align(
             alignment: Alignment(0, 0),
             child: Text(
               "ADD ORDER COMMENTS",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12 + _fontSizeAdjustment / 2,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
@@ -266,37 +281,37 @@ class _CenterStep3State extends State<CenterStep3> {
       child: Row(
         children: <Widget>[
           SizedBox(
-            width: ScreenUtil.getInstance().setWidth(300),
+            width: _basicWidth * 28.0,
             child: Text(
               orderItem.item.itemName,
               textAlign: TextAlign.left,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 14.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
           SizedBox(
-            width: ScreenUtil.getInstance().setWidth(300),
+            width: _basicWidth * 28.0,
             child: Text(
               orderItem.itemCount.toString(),
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 14.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
           SizedBox(
-            width: ScreenUtil.getInstance().setWidth(280),
+            width: _basicWidth * 25.0,
             child: Text(
               (orderItem.itemCount * orderItem.item.unitPrice)
                   .toStringAsFixed(2),
               textAlign: TextAlign.right,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 14.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 fontWeight: FontWeight.w600,
               ),

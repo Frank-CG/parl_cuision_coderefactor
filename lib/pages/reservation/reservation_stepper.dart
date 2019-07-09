@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:parl_cuision_coderefactor/app_conifg.dart';
+import 'package:parl_cuision_coderefactor/models/enums.dart';
 import 'package:parl_cuision_coderefactor/pages/reservation/reservation_bloc.dart';
 
-class ReservationStepper extends StatefulWidget {
-  ReservationStepper({Key key}) : super(key: key);
-
-  _ReservationStepperState createState() => _ReservationStepperState();
-}
-
-class _ReservationStepperState extends State<ReservationStepper> {
+class ReservationStepper extends StatelessWidget {
   final int totalSteps = 4;
 
-  final double _kStepSize = 24.0;
   final List<String> _stepTitles = <String>[
     "GUESTS",
     "DATE",
@@ -21,18 +16,33 @@ class _ReservationStepperState extends State<ReservationStepper> {
   ];
   ReserveBloc _reserveBloc;
 
-  @override
-  void initState() {
-    super.initState();
-    _reserveBloc = BlocProvider.of<ReserveBloc>(context);
-  }
+  final isLargeScreen =
+      AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+  final isLandscape =
+      AppConfig.instance.orientation == Orientation.landscape ? true : false;
+  final double _fontSizeAdjustment =
+      AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+  final double _basicWidth = AppConfig.instance.blockWidth;
+  final double _basicHeigth = AppConfig.instance.blockHeight;
+
+  final double _kStepSize = 24.0;
+  final double _kLineSize =
+      AppConfig.instance.orientation == Orientation.landscape
+          ? AppConfig.instance.blockWidth * 9.0
+          : AppConfig.instance.blockWidth * 7.5;
 
   @override
   Widget build(BuildContext context) {
+    _reserveBloc = BlocProvider.of<ReserveBloc>(context);
+    print("_basicWidth=$_basicWidth, _basicHeigth=$_basicHeigth");
     return Container(
-      height: ScreenUtil.getInstance().setHeight(300),
+      height: _basicHeigth * 15,
       color: Colors.white,
-      padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 14.0),
+      padding: EdgeInsets.only(
+        left: _basicWidth * 5.0,
+        right: _basicWidth * 5.0,
+        top: _basicHeigth * 3.0,
+      ),
       child: BlocBuilder(
         bloc: _reserveBloc,
         builder: (BuildContext context, ReserveState state) {
@@ -63,7 +73,7 @@ class _ReservationStepperState extends State<ReservationStepper> {
         color: _circleColor(index, currentStep));
     List<Widget> step = <Widget>[];
     step.add(_buildLine(index, currentStep, true));
-    step.add(_buildCircle(index,currentStep));
+    step.add(_buildCircle(index, currentStep));
     step.add(_buildLine(index, currentStep, false));
 
     return Column(
@@ -90,7 +100,7 @@ class _ReservationStepperState extends State<ReservationStepper> {
       compNum = currentStep - 1;
     }
     return Container(
-      width: ScreenUtil.getInstance().setWidth(85),
+      width: _kLineSize,
       height: 1.0,
       color: index <= compNum ? Colors.green : Colors.grey.shade400,
     );
@@ -104,7 +114,7 @@ class _ReservationStepperState extends State<ReservationStepper> {
         curve: Curves.fastOutSlowIn,
         duration: kThemeAnimationDuration,
         decoration: BoxDecoration(
-          color: _circleColor(index,currentStep),
+          color: _circleColor(index, currentStep),
           shape: BoxShape.circle,
         ),
         child: Padding(

@@ -76,15 +76,16 @@ class _CheckoutBottomState extends State<CheckoutBottom> {
             }
           },
           child: Container(
-            height: ScreenUtil.getInstance().setHeight(186),
-            width: ScreenUtil.getInstance().setWidth(1125),
+            height: 60.0,
+            width: double.infinity,
+            // margin: EdgeInsets.only(bottom: 20.0,),
             alignment: Alignment(0, 0),
             color: buttonColor,
             child: Text(
               buttonText,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
+                fontSize: 28.0,
                 fontWeight: FontWeight.bold,
                 fontFamily: AppConfig.defaultFontFamily,
               ),

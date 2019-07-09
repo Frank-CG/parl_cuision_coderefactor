@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 import 'package:parl_cuision_coderefactor/models/models.dart';
 
@@ -15,32 +16,44 @@ class OrderItemCard extends StatefulWidget {
 }
 
 class _OrderItemCardState extends State<OrderItemCard> {
+  bool isLargeScreen;
+  bool isLandscape;
+  double _fontSizeAdjustment;
+  double _basicWidth;
+  double _basicHeigth;
+
   @override
   Widget build(BuildContext context) {
     final orderBloc = BlocProvider.of<OrderBloc>(context);
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
 
-    return Container(
-      margin: EdgeInsets.fromLTRB(ScreenUtil.getInstance().setWidth(63), 0,
-          ScreenUtil.getInstance().setWidth(63), 0),
-      width: ScreenUtil.getInstance().setWidth(1500),
-      child: Card(
+    double thumbnailContainerWidth = isLandscape ? _basicWidth * 12.0 : _basicWidth * 22.0;
+    double centerContainerWidth = isLandscape ? _basicWidth * 40.0 : _basicWidth * 50.0;
+    double priceContainerWidth = _basicWidth * 10.0;
+
+    return Card(
         child: Row(
           children: <Widget>[
             Container(
-              width: ScreenUtil.getInstance().setWidth(282),
+              width: thumbnailContainerWidth,
               child: getNetworkImage(widget.orderItem.item.thumbnailUrl),
             ),
             Container(
-              width: ScreenUtil.getInstance().setWidth(550),
-              color: Colors.white,
-              alignment: Alignment.topLeft,
+              width: centerContainerWidth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.only(
-                      left: ScreenUtil.getInstance().setWidth(60),
+                      left: _basicWidth * 5.0,
                     ),
                     child: Text(
                       widget.orderItem.item.itemName,
@@ -52,7 +65,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
                   ),
                   Container(
                     padding: EdgeInsets.only(
-                      left: ScreenUtil.getInstance().setWidth(30),
+                      left: _basicWidth * 4.0,
                     ),
                     child: BlocBuilder(
                       bloc: orderBloc,
@@ -61,7 +74,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
                           children: <Widget>[
                             Container(
                               child: ButtonTheme(
-                                minWidth: ScreenUtil.getInstance().setWidth(30),
+                                minWidth: _basicWidth * 2.5,
                                 height: 30,
                                 child: RaisedButton(
                                   color: Colors.green,
@@ -78,14 +91,14 @@ class _OrderItemCardState extends State<OrderItemCard> {
                             ),
                             Container(
                               padding: EdgeInsets.only(
-                                left: ScreenUtil.getInstance().setWidth(20),
-                                right: ScreenUtil.getInstance().setWidth(20),
+                                left: _basicWidth,
+                                right: _basicWidth,
                               ),
                               child: Text(widget.orderItem.itemCount.toString()),
                             ),
                             Container(
                               child: ButtonTheme(
-                                minWidth: ScreenUtil.getInstance().setWidth(30),
+                                minWidth: _basicWidth * 2.5,
                                 height: 30,
                                 child: RaisedButton(
                                   color: Colors.green,
@@ -109,8 +122,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
               ),
             ),
             Container(
-              width: ScreenUtil.getInstance().setWidth(130),
-              // color: Colors.yellow,
+              width: priceContainerWidth,
               child: BlocBuilder(
                 bloc: orderBloc,
                 builder: (BuildContext context, OrderState state) {
@@ -122,8 +134,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget getNetworkImage(String thumbnailUrl) {

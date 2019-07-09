@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:parl_cuision_coderefactor/app_conifg.dart';
+import 'package:parl_cuision_coderefactor/models/enums.dart';
 
 class CheckoutDialog extends StatelessWidget {
   final String title, pickupTime, buttonText;
@@ -17,24 +18,49 @@ class CheckoutDialog extends StatelessWidget {
     this.checkoutCallback,
   });
 
+  bool isLargeScreen;
+  bool isLandscape;
+  double _fontSizeAdjustment;
+  double _basicWidth;
+  double _basicHeigth;
+
   @override
   Widget build(BuildContext context) {
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape = AppConfig.instance.orientation == Orientation.landscape
+        ? isLargeScreen ? false : true
+        : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 16.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Consts.padding),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: Container(
+        width: AppConfig.instance.blockWidth * (isLandscape ? 60.0 : 80.0),
+        // height: AppConfig.instance.blockHeight * 90.0,
+        child: SingleChildScrollView(
+          // controller: controller,
+          child: dialogContent(context),
+        ),
+      ),
     );
   }
 
   dialogContent(BuildContext context) {
+    double _plateSizeHeight =
+        isLandscape ? Consts.padding * 8.75 : Consts.padding * 10;
     return Stack(
       children: <Widget>[
         Container(
           padding: EdgeInsets.only(
-            top: Consts.avatarRadius + Consts.padding,
+            top: Consts.avatarRadius - Consts.padding,
             // bottom: Consts.padding,
             // left: Consts.padding,
             // right: Consts.padding,
@@ -48,36 +74,41 @@ class CheckoutDialog extends StatelessWidget {
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
+                // offset: const Offset(0.0, 10.0),
               ),
             ],
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 24.0,
+                  fontSize: 24.0 * (isLargeScreen ? 2 : 1),
                   fontWeight: FontWeight.w700,
                   fontFamily: _defaultFontFamily,
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(
+                height: Consts.padding,
+              ),
               Container(
-                width: 200,
+                width: AppConfig.instance.blockWidth * 50,
                 child: Text(
                   "Your order will be ready for pickup at",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 18.0 * (isLargeScreen ? 2 : 1),
                     fontFamily: _defaultFontFamily,
                     fontWeight: FontWeight.w500,
                     color: Colors.grey.shade600,
                   ),
                 ),
               ),
-              SizedBox(height: 24.0),
+              SizedBox(
+                height: Consts.padding,
+              ),
               Container(
                 child: Text(
                   pickupTime,
@@ -88,14 +119,16 @@ class CheckoutDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 24.0),
+              SizedBox(
+                height: Consts.padding,
+              ),
               Container(
                 decoration: new BoxDecoration(
                   color: Colors.green,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: const Radius.circular(Consts.padding),
-                    bottomRight: const Radius.circular(Consts.padding),
+                    bottomLeft: Radius.circular(Consts.padding),
+                    bottomRight: Radius.circular(Consts.padding),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -106,17 +139,17 @@ class CheckoutDialog extends StatelessWidget {
                   ],
                 ),
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.of(context).pop();
                     checkoutCallback();
                   },
                   child: Container(
-                    height: Consts.padding * 3,
+                    height: Consts.padding * (isLargeScreen ? 4 : 3),
                     alignment: Alignment.center,
                     child: Text(
                       buttonText,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.0 * (isLargeScreen ? 2 : 1),
                         fontFamily: _defaultFontFamily,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -124,39 +157,6 @@ class CheckoutDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                // child: Align(
-                //   alignment: Alignment.center,
-                //   child: Container(
-                //       height: Consts.padding*3,
-                //       alignment: Alignment.center,
-                //       child: Text(
-                //         buttonText,
-                //         style: TextStyle(
-                //           fontSize: 20,
-                //           fontFamily: _defaultFontFamily,
-                //           fontWeight: FontWeight.bold,
-                //           color: Colors.white,
-                //         ),
-                //       ),
-                //     ),
-                //   // child: FlatButton(
-                //   //   onPressed: () {
-                //   //     Navigator.of(context).pop(); // To close the dialog
-                //   //     checkoutCallback();
-                //   //   },
-                //   //   child: Container(
-                //   //     child: Text(
-                //   //       buttonText,
-                //   //       style: TextStyle(
-                //   //         fontSize: 20,
-                //   //         fontFamily: _defaultFontFamily,
-                //   //         fontWeight: FontWeight.bold,
-                //   //         color: Colors.white,
-                //   //       ),
-                //   //     ),
-                //   //   ),
-                //   // ),
-                // ),
               ),
             ],
           ),
@@ -167,9 +167,11 @@ class CheckoutDialog extends StatelessWidget {
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: Consts.avatarRadius,
-            child: Image.asset("assets/images/checkout_plate.png"),
+            child: Image.asset(
+              "assets/images/checkout_plate.png",
+              height: _plateSizeHeight,
+            ),
           ),
-          // child: Container,
         ),
         Positioned(
           top: Consts.padding * 3.5,
@@ -180,7 +182,6 @@ class CheckoutDialog extends StatelessWidget {
             radius: Consts.avatarRadius * 0.3,
             child: Image.asset(
               "assets/images/icon_pickuptime.png",
-              // width: ScreenUtil.getInstance().setWidth(100),
             ),
           ),
         ),
@@ -192,6 +193,32 @@ class CheckoutDialog extends StatelessWidget {
 class Consts {
   Consts._();
 
-  static const double padding = 16.0;
-  static const double avatarRadius = 88.0;
+  static const double paddingPortrait = 16.0;
+  static const double avatarRadiusPortrait = 88.0;
+
+  static const double paddingLandscape = 14.0;
+  static const double avatarRadiusLandscape = 77.0;
+
+  static const double paddingLargeScreen = 20.0;
+  static const double avatarRadiusLargeScreen = 110.0;
+
+  static double get padding {
+    bool isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    bool isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    return isLandscape
+        ? isLargeScreen ? paddingLargeScreen : paddingLandscape
+        : paddingPortrait;
+  }
+
+  static double get avatarRadius {
+    bool isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    bool isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    return isLandscape
+        ? isLargeScreen ? avatarRadiusLargeScreen : avatarRadiusLandscape
+        : avatarRadiusPortrait;
+  }
 }

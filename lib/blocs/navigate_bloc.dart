@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meta/meta.dart';
+import 'package:parl_cuision_coderefactor/app_conifg.dart';
 
 /**
  * Navigation Bloc : State definition.
@@ -41,8 +42,8 @@ class NavState extends Equatable {
 
       barIcon = SizedBox(
         child: Image.asset(iconsPath[i], color: iconColor, ),
-        width: ScreenUtil.getInstance().setHeight(66),
-        height: ScreenUtil.getInstance().setHeight(86),
+        width: AppConfig.instance.blockWidth * 4.5,
+        height: AppConfig.instance.blockHeight * 4.5,
       );
 
       barItems.add(BottomNavigationBarItem(

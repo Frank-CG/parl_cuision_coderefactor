@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
+import 'package:parl_cuision_coderefactor/models/enums.dart';
 import 'package:parl_cuision_coderefactor/pages/checkout/checkout.dart';
 import 'package:parl_cuision_coderefactor/pages/checkout/checkout_bloc/checkout_bloc.dart';
 
@@ -17,17 +18,51 @@ class _CheckoutTopState extends State<CheckoutTop> {
   final _pageTitle = "Checkout";
   final List<String> _stepTitles = <String>["REVIEW", "SET TIME", "CONFIRM"];
   CheckoutBloc _bloc;
+  bool isLargeScreen;
+  bool isLandscape;
+  double _fontSizeAdjustment;
+  double _basicWidth;
+  double _basicHeigth;
 
-  double _kStepSize = 24.0;
+  double _kStepSize;
+  double _kLineSize;
 
   @override
   void initState() {
     super.initState();
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape = AppConfig.instance.orientation == Orientation.landscape
+        ? isLargeScreen ? false : true
+        : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
+    _kStepSize = 24.0;
+    _kLineSize = AppConfig.instance.orientation == Orientation.landscape
+        ? AppConfig.instance.blockWidth * 9.0
+        : AppConfig.instance.blockWidth * 7.5;
     this._bloc = BlocProvider.of<CheckoutBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
+    _kStepSize = 24.0;
+    _kLineSize = AppConfig.instance.orientation == Orientation.landscape
+        ? AppConfig.instance.blockWidth * 12.0
+        : AppConfig.instance.blockWidth * 10.5;
+
+    double containerHeight =
+        isLandscape && !isLargeScreen ? _basicHeigth * 15 : _basicHeigth * 12.5;
     return BlocBuilder(
       bloc: _bloc,
       builder: (BuildContext context, CheckoutState state) {
@@ -35,18 +70,23 @@ class _CheckoutTopState extends State<CheckoutTop> {
           child: Column(
             children: <Widget>[
               Container(
-                height: ScreenUtil.getInstance().setHeight(350),
+                height: containerHeight,
                 padding: EdgeInsets.only(
-                    top: ScreenUtil.getInstance().setHeight(190)),
+                  left: _basicWidth * 2.0,
+                  right: _basicWidth * 2.0,
+                  top: _basicHeigth * 3.0,
+                ),
                 color: Colors.white,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     IconButton(
                       onPressed: () {
                         final _navBloc = BlocProvider.of<NavBloc>(context);
                         _navBloc.dispatch(NavTo(
                           pageName: _navBloc.currentState.previousPageName,
-                          previousPageName: _navBloc.currentState.previousPageName,
+                          previousPageName:
+                              _navBloc.currentState.previousPageName,
                         ));
                       },
                       icon: Icon(Icons.arrow_back_ios),
@@ -54,7 +94,7 @@ class _CheckoutTopState extends State<CheckoutTop> {
                     Text(
                       _pageTitle,
                       style: TextStyle(
-                        fontSize: 36.0,
+                        fontSize: 36.0 + _fontSizeAdjustment,
                         fontWeight: FontWeight.w600,
                         fontFamily: AppConfig.defaultFontFamily,
                       ),
@@ -63,7 +103,7 @@ class _CheckoutTopState extends State<CheckoutTop> {
                 ),
               ),
               Container(
-                height: ScreenUtil.getInstance().setHeight(300),
+                height: containerHeight,
                 color: Colors.white,
                 padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 14.0),
                 child: BlocBuilder(
@@ -96,7 +136,7 @@ class _CheckoutTopState extends State<CheckoutTop> {
     for (int i = 0; i < stepCount; i++) {
       children.add(_buildStep(i, currentStep));
     }
-    // children.add( _buildStep(stepCount-1, true) );
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +146,7 @@ class _CheckoutTopState extends State<CheckoutTop> {
 
   Widget _buildStep(int index, int currentStep) {
     var stepTextStyle = TextStyle(
-        fontSize: 10.0,
+        fontSize: 10.0 + _fontSizeAdjustment / 2,
         fontFamily: "Nunito Sans",
         fontWeight: FontWeight.w700,
         color: _circleColor(index, currentStep));
@@ -144,7 +184,7 @@ class _CheckoutTopState extends State<CheckoutTop> {
       compIndex = currentStep - 1;
     }
     return Container(
-      width: ScreenUtil.getInstance().setWidth(120),
+      width: _kLineSize,
       height: 1.0,
       color: index <= compIndex ? Colors.green : Colors.grey.shade400,
     );

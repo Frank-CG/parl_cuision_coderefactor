@@ -12,14 +12,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final isLargeScreen =
-      AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
-  final isLandscape =
-      AppConfig.instance.orientation == Orientation.landscape ? true : false;
-  final double _fontSizeAdjustment =
-      AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
-  final double _basicWidth = AppConfig.instance.blockWidth;
-  final double _basicHeigth = AppConfig.instance.blockHeight;
+  bool isLargeScreen;
+  bool isLandscape;
+  double _fontSizeAdjustment;
+  double _basicWidth;
+  double _basicHeigth;
 
   TextStyle _pageTitleStyle;
   TextStyle _tileStyle;
@@ -32,39 +29,50 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     this.authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
-    _pageTitleStyle = TextStyle(
-      fontSize: 64.0 + _fontSizeAdjustment,
-      fontFamily: AppConfig.defaultFontFamily,
-      fontWeight: FontWeight.bold,
-    );
-    _tileStyle = TextStyle(
-      fontSize: 32.0 + _fontSizeAdjustment,
-      fontFamily: AppConfig.defaultFontFamily,
-      fontWeight: FontWeight.bold,
-    );
-    _subtitleStyle = TextStyle(
-      fontSize: 32.0 + _fontSizeAdjustment,
-      fontFamily: AppConfig.defaultFontFamily,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    );
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
+
+    _pageTitleStyle = TextStyle(
+      fontSize: 48.0 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+    );
+    _tileStyle = TextStyle(
+      fontSize: 28.0 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+    );
+    _subtitleStyle = TextStyle(
+      fontSize: 18.0 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    );
+
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           _pageTop(),
           SizedBox(
-            height: ScreenUtil.getInstance().setHeight(40),
+            height: _basicHeigth * 5,
           ),
           _profileInfo(),
           SizedBox(
-            height: ScreenUtil.getInstance().setHeight(40),
+            height: _basicHeigth * 5,
           ),
-          //_notification(),
+          _notification(),
         ],
       ),
     );
@@ -75,6 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: EdgeInsets.only(
         left: _basicWidth * 5.0,
         right: _basicWidth * 5.0,
+        top: _basicHeigth * 5.0,
       ),
       child: Row(
         children: <Widget>[
@@ -95,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
                   "assets/images/nav.png",
-                  width: _basicWidth * 12.0,
+                  width: _basicWidth * (isLandscape ? 12.0 : 20.0),
                 ),
               ),
             ),
@@ -234,44 +243,40 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _notification() {
     TextStyle _labelStyle = TextStyle(
       color: Colors.grey,
-      fontSize: 18.0,
+      fontSize: 18.0 + _fontSizeAdjustment,
       fontFamily: AppConfig.defaultFontFamily,
       fontWeight: FontWeight.bold,
     );
     return Container(
-      height: ScreenUtil.getInstance().setHeight(1100),
+      // height: ScreenUtil.getInstance().setHeight(1100),
+      padding: EdgeInsets.only(
+        left: _basicWidth * 5.0,
+        right: _basicWidth * 5.0,
+        top: _basicHeigth * 3.0,
+      ),
       alignment: Alignment.topLeft,
       child: Column(
         children: <Widget>[
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(30),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
+            width: _basicWidth * 90,
             child: Text(
               "Notifications",
               style: _tileStyle,
             ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(30),
-              left: ScreenUtil.getInstance().setWidth(75),
-            ),
+            width: _basicWidth * 90,
             child: Row(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(220),
+                  width: _basicWidth * 20,
                   child: Text(
                     "Pickup",
                     style: _labelStyle,
                   ),
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(160),
+                  width: _basicWidth * 15,
                   child: Switch(
                     value: isPickup,
                     onChanged: (value) {
@@ -284,17 +289,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 SizedBox(
-                  width: ScreenUtil.getInstance().setWidth(60),
+                  width: _basicWidth * 10,
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(280),
+                  width: _basicWidth * 30,
                   child: Text(
                     "Reservation",
                     style: _labelStyle,
                   ),
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(160),
+                  width: _basicWidth * 15,
                   child: Switch(
                     value: isReservation,
                     onChanged: (value) {
@@ -311,32 +316,24 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Container(
             height: 1,
+            width: _basicWidth * 90,
             color: Colors.grey[300],
-            margin: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(10),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(20),
-              bottom: ScreenUtil.getInstance().setHeight(20),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
+            width: _basicWidth * 90,
+            height: _basicHeigth * 8.0,
+            alignment: Alignment.centerLeft,
             child: Row(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(750),
+                  width: _basicWidth * 70,
                   child: Text(
                     "Payment information",
                     style: _tileStyle,
                   ),
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(150),
+                  width: _basicWidth * 15,
                   child: Icon(
                     Icons.lock_outline,
                     color: Colors.green,
@@ -344,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(50),
+                  width: _basicWidth * 5,
                   child: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.green,
@@ -356,32 +353,24 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Container(
             height: 1,
+            width: _basicWidth * 90,
             color: Colors.grey[300],
-            margin: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(10),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
           ),
           Container(
-            width: ScreenUtil.getInstance().setWidth(1125),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(20),
-              bottom: ScreenUtil.getInstance().setHeight(20),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
+            width: _basicWidth * 90,
+            height: _basicHeigth * 8.0,
+            alignment: Alignment.centerLeft,
             child: Row(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(750),
+                  width: _basicWidth * 70,
                   child: Text(
                     "Change password",
                     style: _tileStyle,
                   ),
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(150),
+                  width: _basicWidth * 15,
                   child: Icon(
                     Icons.lock_outline,
                     color: Colors.green,
@@ -389,7 +378,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Container(
-                  width: ScreenUtil.getInstance().setWidth(50),
+                  width: _basicWidth * 5,
                   child: Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.green,
@@ -401,68 +390,59 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Container(
             height: 1,
+            width: _basicWidth * 90,
             color: Colors.grey[300],
-            margin: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(10),
-              left: ScreenUtil.getInstance().setWidth(75),
-              right: ScreenUtil.getInstance().setWidth(75),
-            ),
           ),
+
           Container(
-            height: ScreenUtil.getInstance().setHeight(240),
-            padding: EdgeInsets.only(
-              top: ScreenUtil.getInstance().setHeight(60),
-              bottom: ScreenUtil.getInstance().setHeight(60),
-            ),
-            child: GestureDetector(
-              onTap: _logout,
-              child: Container(
-                width: ScreenUtil.getInstance().setWidth(300),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.green,
+            width: _basicWidth * 90,
+            height: _basicHeigth * 15,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: _logout,
+                  child: Container(
+                    width: _basicWidth * 25,
+                    height: 40.0,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.green,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.green,
+                    ),
+                    child: Text(
+                      "Logout",
+                      style: _subtitleStyle,
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.green,
                 ),
-                child: Text(
-                  "Logout",
-                  style: _subtitleStyle,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            height: ScreenUtil.getInstance().setHeight(160),
-            width: ScreenUtil.getInstance().setWidth(900),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.green,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            child: GestureDetector(
-              onTap: () {
-                print("Profile Save");
-                // Navigator.pop(context);
-              },
-              child: Container(
-                alignment: Alignment(0, 0),
-                color: Colors.green,
-                child: Text(
-                  "Save",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: AppConfig.defaultFontFamily,
+
+                GestureDetector(
+                  onTap: (){},
+                  child: Container(
+                    width: _basicWidth * 45,
+                    height: 40.0,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.green,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.green,
+                    ),
+                    child: Text(
+                      "Save",
+                      style: _subtitleStyle,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
+              ],
             ),
           ),
         ],
@@ -472,6 +452,5 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _logout() {
     authenticationBloc.dispatch(LoggedOut());
-    // Navigator.pop(context);
   }
 }

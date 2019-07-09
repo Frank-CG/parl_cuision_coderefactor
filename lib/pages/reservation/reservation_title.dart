@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
+import 'package:parl_cuision_coderefactor/models/enums.dart';
 
 class ReservationTitle extends StatelessWidget {
-  const ReservationTitle({Key key}) : super(key: key);
+  ReservationTitle({Key key}) : super(key: key);
+
+  final isLargeScreen =
+      AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+  final isLandscape =
+      AppConfig.instance.orientation == Orientation.landscape ? true : false;
+  final double _fontSizeAdjustment =
+      AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+  final double _basicWidth = AppConfig.instance.blockWidth;
+  final double _basicHeigth = AppConfig.instance.blockHeight;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: ScreenUtil.getInstance().setHeight(350),
-        width: ScreenUtil.getInstance().setWidth(1125),
+        height: _basicHeigth * 15,
         color: Colors.white,
         alignment: Alignment.bottomLeft,
         padding: EdgeInsets.only(
-          left: 16.0,
+          left: _basicWidth * 5.0,
+          right: _basicWidth * 5.0,
+          top: _basicHeigth * 5.0,
         ),
         child: Text(
           "Reservations",

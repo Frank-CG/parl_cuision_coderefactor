@@ -58,19 +58,7 @@ class _MenuPageLandscapeState extends State<MenuPageLandscape> {
                   ),
                 ),
               ),
-              Positioned(
-                top: AppConfig.instance.blockHeight * 15.0,
-                right: 0.0,
-                child: GestureDetector(
-                  onTap: profileOnTap,
-                  child: Container(
-                    child: Image.asset(
-                      "assets/images/nav.png",
-                      height: AppConfig.instance.blockHeight * 15.0,
-                    ),
-                  ),
-                ),
-              ),
+              
               Container(
                 width: AppConfig.instance.blockWidth * 40,
                 height: AppConfig.instance.blockHeight * 100,
@@ -207,6 +195,19 @@ class _MenuPageLandscapeState extends State<MenuPageLandscape> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              Positioned(
+                top: AppConfig.instance.blockHeight * 15.0,
+                right: 0.0,
+                child: GestureDetector(
+                  onTap: profileOnTap,
+                  child: Container(
+                    child: Image.asset(
+                      "assets/images/nav.png",
+                      height: AppConfig.instance.blockHeight * 15.0,
+                    ),
+                  ),
                 ),
               ),
             ],

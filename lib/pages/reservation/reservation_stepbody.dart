@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_date_pickers/flutter_date_pickers.dart' as dp;
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/navigate_bloc.dart';
+import 'package:parl_cuision_coderefactor/models/enums.dart';
 import 'package:parl_cuision_coderefactor/pages/common/ex_day_picker.dart';
 import 'package:parl_cuision_coderefactor/pages/reservation/hour_minute_picker.dart';
 import 'package:parl_cuision_coderefactor/pages/reservation/reservation_bloc.dart';
@@ -19,14 +20,36 @@ class ReservationStepBody extends StatefulWidget {
 class _ReservationStepBodyState extends State<ReservationStepBody> {
   ReserveBloc _reserveBloc;
 
+  bool isLargeScreen;
+  bool isLandscape;
+  double _fontSizeAdjustment;
+  double _basicWidth;
+  double _basicHeigth;
+
   @override
   void initState() {
-    super.initState();
     _reserveBloc = BlocProvider.of<ReserveBloc>(context);
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    isLargeScreen =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? true : false;
+    isLandscape =
+        AppConfig.instance.orientation == Orientation.landscape ? true : false;
+    _fontSizeAdjustment =
+        AppConfig.instance.deviceType == DeviceType.Tablets ? 8.0 : 0.0;
+    _basicWidth = AppConfig.instance.blockWidth;
+    _basicHeigth = AppConfig.instance.blockHeight;
     return BlocBuilder(
       bloc: _reserveBloc,
       builder: (BuildContext context, ReserveState state) {
@@ -41,40 +64,34 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
 
         Color unSelectedTextColor = Colors.grey.shade600;
         TextStyle titleStyle = TextStyle(
-          fontSize: 14,
+          fontSize: 14 + _fontSizeAdjustment,
           fontFamily: AppConfig.defaultFontFamily,
           color: unSelectedTextColor,
           fontWeight: FontWeight.bold,
         );
 
         TextStyle subTitleStyle = TextStyle(
-          fontSize: 20,
+          fontSize: 20 + _fontSizeAdjustment,
           fontFamily: AppConfig.defaultFontFamily,
           color: unSelectedTextColor,
           fontWeight: FontWeight.bold,
         );
 
         return Container(
-          height: ScreenUtil.getInstance().setHeight(1550),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                height: ScreenUtil.getInstance().setHeight(140),
-                padding: EdgeInsets.only(
-                  top: ScreenUtil.getInstance().setHeight(80),
-                ),
+                height: 20.0,
+              ),
+              Container(
                 child: Text(
                   title,
                   style: titleStyle,
                 ),
               ),
               Container(
-                height: ScreenUtil.getInstance().setHeight(120),
-                padding: EdgeInsets.only(
-                  top: ScreenUtil.getInstance().setHeight(20),
-                ),
                 child: Text(
                   subtitles[state.stepIndex],
                   style: subTitleStyle,
@@ -83,6 +100,9 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
               _getPageContent(state.stepIndex),
               _getNextButton(
                   state.stepIndex, state.totalSteps, state.nextEnable),
+              Container(
+                height: 50.0,
+              ),
             ],
           ),
         );
@@ -96,26 +116,39 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
       buttonText = "Reserve";
     }
     Color buttonColor = isEnable ? Colors.green : Colors.grey;
+    TextStyle buttonTextStyle = TextStyle(
+      fontSize: 20 + _fontSizeAdjustment,
+      fontFamily: AppConfig.defaultFontFamily,
+      fontWeight: FontWeight.bold,
+    );
     return Container(
+      height: 50.0,
       child: ButtonTheme(
-        minWidth: ScreenUtil.getInstance().setWidth(850),
+        minWidth: _basicWidth * 60.0,
         child: RaisedButton(
           color: buttonColor,
           textColor: Colors.white,
           shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0)),
-          child: Text(buttonText),
+          child: Text(
+            buttonText,
+            style: buttonTextStyle,
+          ),
           onPressed: () {
             if (currentStep == totalSteps - 1) {
               showDialog(
                 context: context,
                 builder: (BuildContext context) => ReserveDialog(
                       title: "Success!",
-                      reserve_time: _reserveBloc.currentState.reserveTimeFormated,
+                      reserveTime:
+                          _reserveBloc.currentState.reserveTimeFormated,
                       buttonText: "OK",
                       callback: () {
                         NavBloc _navBloc = BlocProvider.of<NavBloc>(context);
-                        _navBloc.dispatch(NavTo(pageName: PageName.Menu, previousPageName: PageName.Menu, ));
+                        _navBloc.dispatch(NavTo(
+                          pageName: PageName.Menu,
+                          previousPageName: PageName.Menu,
+                        ));
                       },
                     ),
               );
@@ -141,7 +174,7 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
 
   Widget _getPageContent(int stepIndex) {
     TextStyle contentStyle = TextStyle(
-      fontSize: 18.0,
+      fontSize: 18.0 + _fontSizeAdjustment,
       fontFamily: AppConfig.defaultFontFamily,
       color: Colors.grey.shade600,
       fontWeight: FontWeight.bold,
@@ -176,11 +209,11 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
       dp.DatePickerStyles styles = dp.DatePickerStyles(
         displayedPeriodTitle: TextStyle(
           color: Colors.green,
-          fontSize: 20.0,
+          fontSize: 20.0 + _fontSizeAdjustment,
           fontWeight: FontWeight.bold,
         ),
         defaultDateTextStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: 14.0 + _fontSizeAdjustment,
         ),
         selectedDateStyle: Theme.of(context)
             .accentTextTheme
@@ -190,9 +223,15 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
             BoxDecoration(color: Colors.green, shape: BoxShape.circle),
       );
 
+      double containerWidth =
+          isLandscape ? _basicWidth * 75.0 : _basicWidth * 90.0;
+      double conatinerHeigth =
+          isLandscape ? _basicWidth * 55.0 : _basicWidth * 70.0;
+
       content = Container(
-        height: ScreenUtil.getInstance().setHeight(1090),
-        padding: EdgeInsets.all(16.0),
+        width: containerWidth,
+        height: conatinerHeigth,
+        // padding: EdgeInsets.all(16.0),
         child: ExDayPicker(
           selectedDate: _reserveBloc.currentState.reservDateTime,
           onChanged: (DateTime value) {
@@ -232,14 +271,17 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
         );
       }
 
+      double containerWidth =
+          isLandscape ? _basicWidth * 70.0 : _basicWidth * 90.0;
+
       content = Container(
-        margin: EdgeInsets.only(
-          bottom: 30.0,
-        ),
+        width: containerWidth,
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              height: 20.0,
+            ),
+            Container(
               child: Text(
                 sTime,
                 style: timeStyle,
@@ -247,6 +289,9 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
               ),
             ),
             HourMinutePicker(),
+            Container(
+              height: 30.0,
+            ),
           ],
         ),
       );
@@ -266,27 +311,27 @@ class _ReservationStepBodyState extends State<ReservationStepBody> {
               ),
               child: Image.asset(
                 "assets/images/icon_summary.png",
-                width: ScreenUtil.getInstance().setWidth(216),
+                width: _basicWidth * 20.0,
               ),
             ),
             Text(
               _reserveBloc.currentState.reservDateFormated,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 20.0 + _fontSizeAdjustment,
                 fontWeight: FontWeight.w400,
               ),
             ),
             Text(
               _reserveBloc.currentState.reserveTimeFormated,
               style: TextStyle(
-                fontSize: 70.0,
+                fontSize: 70.0 + _fontSizeAdjustment * 2,
                 fontWeight: FontWeight.w500,
               ),
             ),
             Text(
-              "$_guestNumber person",
+              "${_guestNumber + 1} person",
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 16.0 + _fontSizeAdjustment,
                 fontFamily: AppConfig.defaultFontFamily,
                 color: Colors.grey.shade600,
               ),

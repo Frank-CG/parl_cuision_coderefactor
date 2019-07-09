@@ -20,6 +20,7 @@ class InfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _navBloc = BlocProvider.of<NavBloc>(context);
+    print("_basicWidth=$_basicWidth, _basicHeigth=$_basicHeigth");
 
     return SingleChildScrollView(
       child: Column(
@@ -68,7 +69,7 @@ class InfoPage extends StatelessWidget {
       // color: Colors.white,
       padding: EdgeInsets.only(
         left: _basicWidth * 4.0,
-        top: _basicHeigth * 0.5,
+        top: _basicHeigth * 5,
       ),
       child: Column(
         children: <Widget>[
@@ -99,7 +100,7 @@ class InfoPage extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: Image.asset(
                       "assets/images/nav.png",
-                      width: _basicWidth * 12.0,
+                      width: _basicWidth  * (isLandscape ? 12.0 : 20.0),
                     ),
                   ),
                 ),
