@@ -25,62 +25,51 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return BlocBuilder(
-          bloc: _navBloc,
-          builder: (BuildContext context, NavState state) {
-            Widget _bodyWidget;
-            switch (state.pageName) {
-              case PageName.Menu:
-                _bodyWidget =
-                    AppConfig.instance.orientation == Orientation.portrait
-                        ? MenuPagePortrait()
-                        : MenuPageLandscape();
-                break;
-              case PageName.Reservation:
-                _bodyWidget = ReservationPage();
-                break;
-              case PageName.Information:
-                _bodyWidget = InfoPage();
-                break;
-              case PageName.Cart:
-                _bodyWidget = CheckoutPage();
-                break;
-              case PageName.Profile:
-                _bodyWidget = ProfilePage();
-                break;
-              default:
-                _bodyWidget = null;
-                break;
-            }
+    return BlocBuilder(
+      bloc: _navBloc,
+      builder: (BuildContext context, NavState state) {
+        Widget _bodyWidget;
+        switch (state.pageName) {
+          case PageName.Menu:
+            _bodyWidget = AppConfig.instance.orientation == Orientation.portrait
+                ? MenuPagePortrait()
+                : MenuPageLandscape();
+            break;
+          case PageName.Reservation:
+            _bodyWidget = ReservationPage();
+            break;
+          case PageName.Information:
+            _bodyWidget = InfoPage();
+            break;
+          case PageName.Cart:
+            _bodyWidget = CheckoutPage();
+            break;
+          case PageName.Profile:
+            _bodyWidget = ProfilePage();
+            break;
+          default:
+            _bodyWidget = null;
+            break;
+        }
+        
+        final _barItems = state.pageNavBarItem;
+        final _bottomBarWidget = state.pageName.index == 3
+            ? null
+            : BottomNavigationBar(
+                onTap: (int index) {
+                  _navBloc.dispatch(NavTo(
+                      pageName: PageName.values[index],
+                      previousPageName: state.pageName));
+                },
+                // currentIndex: state.pageName.index,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                items: _barItems,
+              );
 
-            // Widget _bodyWidget = OrientationBuilder(
-            //   builder: (context, orientation) {
-            //     return _bodyWidgetTemp;
-            //   },
-            // );
-
-            final _barItems = state.pageNavBarItem;
-            final _bottomBarWidget = state.pageName.index == 3
-                ? null
-                : BottomNavigationBar(
-                    onTap: (int index) {
-                      _navBloc.dispatch(NavTo(
-                          pageName: PageName.values[index],
-                          previousPageName: state.pageName));
-                    },
-                    // currentIndex: state.pageName.index,
-                    showSelectedLabels: false,
-                    showUnselectedLabels: false,
-                    items: _barItems,
-                  );
-
-            return Scaffold(
-              body: _bodyWidget,
-              bottomNavigationBar: _bottomBarWidget,
-            );
-          },
+        return Scaffold(
+          body: _bodyWidget,
+          bottomNavigationBar: _bottomBarWidget,
         );
       },
     );
