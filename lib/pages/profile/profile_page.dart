@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
 import 'package:parl_cuision_coderefactor/models/enums.dart';
+import 'package:parl_cuision_coderefactor/repositories/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -25,10 +26,12 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isReservation = true;
   AuthenticationBloc authenticationBloc;
 
+  UserRepository userRepository;
+
   @override
   void initState() {
     this.authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
-    
+    this.userRepository = authenticationBloc.userRepository;
     super.initState();
   }
 
@@ -101,10 +104,12 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () {},
               child: Container(
                 alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  "assets/images/nav.png",
-                  width: _basicWidth * (isLandscape ? 12.0 : 20.0),
-                ),
+                // child: Image.asset(
+                //   "assets/images/nav.png",
+                //   width: _basicWidth * (isLandscape ? 12.0 : 20.0),
+                // ),
+                child: Image.network("https://graph.microsoft.com/v1.0/users/frankg@sliq.com/photo/\$value", 
+                  headers: {"Authorization": "eyJ0eXAiOiJKV1QiLCJub25jZSI6IlMtRUNJQXJKU29sV2lYN1VJa0tCMTBuZjQyR3ByX09NZnRMc1YwZURsR3MiLCJhbGciOiJSUzI1NiIsIng1dCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCIsImtpZCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hOTRiZGQ2OC01ZmVhLTQ5ZWItODA0NS0xMTAwNmQwMjI4YzgvIiwiaWF0IjoxNTY2MzIxMjk0LCJuYmYiOjE1NjYzMjEyOTQsImV4cCI6MTU2NjMyNTE5NCwiYWlvIjoiNDJGZ1lKQTdlKzNFOUNhTzhMK2g4eXQxTHpEZEF3QT0iLCJhcHBfZGlzcGxheW5hbWUiOiJCMkN0ZXN0IiwiYXBwaWQiOiIwODE2NjYyNi1lNWFmLTQ0MjQtOGI3YS0wYTZkNTk4NTM2MTciLCJhcHBpZGFjciI6IjEiLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hOTRiZGQ2OC01ZmVhLTQ5ZWItODA0NS0xMTAwNmQwMjI4YzgvIiwib2lkIjoiMTdlMWY3YzctMTVkNC00NjQwLWE4ZGItM2RiMTk4ZDA2NzNhIiwicm9sZXMiOlsiRGlyZWN0b3J5LlJlYWQuQWxsIiwiVXNlci5SZWFkLkFsbCJdLCJzdWIiOiIxN2UxZjdjNy0xNWQ0LTQ2NDAtYThkYi0zZGIxOThkMDY3M2EiLCJ0aWQiOiJhOTRiZGQ2OC01ZmVhLTQ5ZWItODA0NS0xMTAwNmQwMjI4YzgiLCJ1dGkiOiJQazZSLVVpTnhFR0h1MWNjVEUtb0FBIiwidmVyIjoiMS4wIiwieG1zX3RjZHQiOjE0MjIzODgyNTl9.CbKF3o5V2NnCheSFV2Yjcqd20qSkpC0mAsYHba_zflAcl-2MSR-VMpJyXXtO3Bbv02WvVJ7JT36XVEb8VEo2_LFwhiesauO49ZHrNW92qvAVZMhI06NmXoVfI07VZYqomazZ0RdBAKWllCsYSo4JSprXudV0wPn8t0S4bANMDvRfAXCW2O_SAANR9hUXNx3jUsTGL2Hxww5HG8C-2xLI2B6KCYp85Q8ttdYLJ1Vf9atwKryjn33XaVgdTjXCfnG90Y8DZRle9o_8qMlZtH_PYOthgzTSifTdWTHM7bahOQIlhpb-9VAi0wbYlaQvDo5zQeKEn1rIBAlch8LW_fX9zA"},),
               ),
             ),
           ),
@@ -150,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: _basicWidth * 40,
                   child: TextField(
                     style: _inputStyle,
-                    controller: _getTextController("Mark"),
+                    controller: _getTextController(userRepository.userInfo.givenName),
                     decoration: InputDecoration(
                       labelText: "FIRST NAME",
                       labelStyle: _labelStyle,
@@ -169,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: _basicWidth * 40,
                   child: TextField(
                     style: _inputStyle,
-                    controller: _getTextController("Smith"),
+                    controller: _getTextController(userRepository.userInfo.surname),
                     decoration: InputDecoration(
                       labelText: "LAST NAME",
                       labelStyle: _labelStyle,
@@ -191,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: _basicWidth * 84,
                   child: TextField(
                     style: _inputStyle,
-                    controller: _getTextController("msmith@gmail.com"),
+                    controller: _getTextController(userRepository.userInfo.mail),
                     decoration: InputDecoration(
                       labelText: "EMAIL",
                       labelStyle: _labelStyle,
@@ -213,7 +218,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: _basicWidth * 84,
                   child: TextField(
                     style: _inputStyle,
-                    controller: _getTextController("514-999-2464"),
+                    controller: _getTextController(userRepository.userInfo.mobilePhone),
                     decoration: InputDecoration(
                       labelText: "PHONE",
                       labelStyle: _labelStyle,

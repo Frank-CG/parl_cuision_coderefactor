@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parl_cuision_coderefactor/app_conifg.dart';
 import 'package:parl_cuision_coderefactor/blocs/blocs.dart';
+import 'package:parl_cuision_coderefactor/repositories/repositories.dart';
 
 class LoginForm extends StatefulWidget {
   final LoginBloc loginBloc;
@@ -93,9 +94,11 @@ class _LoginFormState extends State<LoginForm> {
                       obscureText: true,
                     ),
                   ),
-                  SizedBox(height: AppConfig.instance.blockHeight * 5,),
+                  SizedBox(
+                    height: AppConfig.instance.blockHeight * 5,
+                  ),
                   Container(
-                    height: AppConfig.instance.blockHeight * 35,
+                    height: AppConfig.instance.blockHeight * 27,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("assets/images/plate.png"),
@@ -109,10 +112,37 @@ class _LoginFormState extends State<LoginForm> {
                         minHeight: AppConfig.instance.blockWidth * 8,
                       ),
                       child: RaisedButton(
-                        onPressed:
-                            state is! LoginLoading ? _onLoginButtonPressed : null,
+                        onPressed: (){
+                          if(state is! LoginLoading){
+                            _onLoginButtonPressed(IdentityProvider.Local);
+                          }
+                        },
                         child: Text(
                           'Login',
+                          style: TextStyle(
+                              fontSize: 16.9, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: AppConfig.instance.blockHeight * 2,
+                  ),
+                  Container(
+                    height: AppConfig.instance.blockHeight * 6,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: AppConfig.instance.blockWidth * 60,
+                        minHeight: AppConfig.instance.blockWidth * 8,
+                      ),
+                      child: RaisedButton(
+                        onPressed: (){
+                          if(state is! LoginLoading){
+                            _onLoginButtonPressed(IdentityProvider.SliqAzureAD);
+                          }
+                        },
+                        child: Text(
+                          'Sliq Azure AD Login',
                           style: TextStyle(
                               fontSize: 16.9, fontWeight: FontWeight.bold),
                         ),
@@ -153,10 +183,12 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  _onLoginButtonPressed() {
+  _onLoginButtonPressed(IdentityProvider idp) {
+    print(_loginBloc.currentState);
     _loginBloc.dispatch(LoginButtonPressed(
       username: _usernameController.text,
       password: _passwordController.text,
+      identityProvider: idp,
       authenticationBloc: widget.authenticationBloc,
     ));
   }

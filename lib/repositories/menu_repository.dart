@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:parl_cuision_coderefactor/models/menu.dart';
 import 'package:parl_cuision_coderefactor/models/models.dart';
@@ -5,7 +7,7 @@ import 'package:parl_cuision_coderefactor/repositories/menu_api_client.dart';
 
 class MenuRepository {
   final MenuApiClient menuApiClient = MenuApiClient(
-    httpClient: http.Client(),
+    httpClient: HttpClient(),//http.Client(),
   );
   Menu _data;
   Menu _filteredData;
@@ -18,10 +20,10 @@ class MenuRepository {
 
   Future<void> initial() async {
     await menuApiClient.fetchMenu().then((onValue){ _data = onValue; });
-    _expiredTime = DateTime.now().add(Duration(seconds: 120,));
+    _expiredTime = DateTime.now().add(Duration(seconds: 30,));
   }
 
-  Future<Menu> fetchMenu({forceRefresh: false, isHealthy: true, isVegetarian: true, isVegan: true}) async {
+  Future<Menu> fetchMenu({forceRefresh: true, isHealthy: true, isVegetarian: true, isVegan: true}) async {
     if(forceRefresh){
       await initial();
     }

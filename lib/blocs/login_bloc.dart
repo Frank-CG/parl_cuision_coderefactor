@@ -26,10 +26,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final token = await userRepository.authenticate(
           username: event.username,
           password: event.password,
+          idp: event.identityProvider,
         );
 
-        event.authenticationBloc.dispatch(LoggedIn(token: token));
-        yield LoginInitial();
+        if(token != "local"){
+          event.authenticationBloc.dispatch(LoggedIn(token: token));
+          yield LoginInitial();
+        }else{
+          yield LoginFailure(error: "Username not found!");
+        }
       } catch (error) {
         yield LoginFailure(error: error.toString());
       }
